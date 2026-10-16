@@ -16,7 +16,7 @@
         #clicker {
             cursor: pointer;
             padding: 0;
-            transition: transform 0.05s;
+            transition: transform 0.4s ease;
         }
         #clicker img {
             width: 200px;
@@ -25,6 +25,14 @@
         }
         #clicker:active { transform: scale(0.93); }
         #clicker:focus-visible { outline: 3px solid green; outline-offset: 6px; }
+
+        #clicker:active {transform: sacel(0.93);}
+        #clicker:focus-visible {outline: 3px solid green; outline-offset:6px; }
+
+        #clicker.is-spinning {
+            transform: rotate(360deg);
+        }
+
 
         #count {
             font-size: 3rem;
@@ -55,13 +63,24 @@
     <p>clicks</p>
 
     <br>
+<!--button functions-->
+    
+    <!--upgrade button-->
     <button id="upgrade" onclick="buyUpgrade()">get 2x the clicks</button>
     <p id="message"></p>
 
-
-    <button id="clicker" onclick="increaseCount()">
+    <!--this is the einstein you click-->
+    <button id="clicker" onclick="increaseCount(); spinElement(this);">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXnNsd6HAjRGAHc33PpnQC7LfZFjI4N6OiV8tvGcMBA&s" alt="Click me" style="border-radius: 50%;">
     </button>
+    
+    <!---->
+    
+    
+
+<!--java script-->
+    
+    
     <script>
     let count = 0;
     let clickPower = 1;
