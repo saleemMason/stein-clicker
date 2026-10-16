@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stein Clicker</title>
+    <style>
+        body {
+            background-color: black;
+            color: green;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        h1 { color: green; }
+        p  { font-style: italic; color: green; }
+
+        #clicker {
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.05s;
+        }
+        #clicker img {
+            width: 200px;
+            max-width: 80vw;
+            display: block;
+        }
+        #clicker:active { transform: scale(0.93); }
+        #clicker:focus-visible { outline: 3px solid green; outline-offset: 6px; }
+
+        #count {
+            font-size: 3rem;
+            margin: 0.5rem 0;
+        }
+
+        
+
+        #upgrade {
+            background-color: black;
+            color: lime;
+            border: 2px solid green;
+            padding: 12px 20px;
+            margin: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #upgrade:hover {
+            background-color: darkgreen;
+        }
+    </style>
+</head>
+<body>
+    <h1>This is a clicker game</h1>
+
+    <p id="count">0</p>
+    <p>clicks</p>
+
+    <br>
+    <button id="upgrade" onclick="buyUpgrade()">get 2x the clicks</button>
+    <p id="message"></p>
+
+
+    <button id="clicker" onclick="increaseCount()">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXnNsd6HAjRGAHc33PpnQC7LfZFjI4N6OiV8tvGcMBA&s" alt="Click me" style="border-radius: 50%;">
+    </button>
+    <script>
+    let count = 0;
+    let clickPower = 1;
+    let upgradeCost = 50;
+
+    function increaseCount() {
+        count += clickPower;
+        updateCount();
+    }
+
+    function buyUpgrade() {
+        if (count >= upgradeCost) {
+            count -= upgradeCost;
+            clickPower *= 2;
+            upgradeCost *= 2;
+
+            document.getElementById("upgrade").textContent =
+                "Buy 2x Clicks (Cost: " + upgradeCost + " clicks)";
+
+            document.getElementById("message").textContent =
+                "Upgrade purchased! Each click earns " + clickPower + "!";
+        } else {
+            document.getElementById("message").textContent =
+                "Not enough clicks! Keep clicking Einstein!";
+        }
+
+        updateCount();
+    }
+
+    function updateCount() {
+        document.getElementById("count").textContent = count;
+    }
+</script>
+</body>
+</html> 
