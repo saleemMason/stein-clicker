@@ -88,11 +88,13 @@
         <img id="einstein" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXnNsd6HAjRGAHc33PpnQC7LfZFjI4N6OiV8tvGcMBA&s" alt="Click me">
     </button>    
     <script>
+        let rotation = 0;
         let count = 0;
         let clickPower = 1;
         let upgradeCost = 50;
         let autocost = 1;
-        let rotation = 0;
+        let autoclickers = 0;
+
 
         function increaseCount() {
             count += clickPower;
@@ -131,6 +133,25 @@
             document.getElementById("autoclick").textContent = 
                 "Buy auto Click (cost:" + autocost + "clicks)";
         }
+
+        function buy_autoclick(){
+            if (count >= autocost){
+                clicks -= autocost;
+                autoclickers++;
+                autocost = Math.floor(autocost * 1.15);
+                updateCount()
+                add_autoclick();
+            } else {
+                alert("Not enough clicks")
+            }
+        }
+
+        setInterval(function(){
+            if (autoclickers > 0){
+                clicks += autoclickers
+                updateCount()
+            }
+        }, 1000);
 
         updateCount()
 
