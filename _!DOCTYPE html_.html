@@ -53,6 +53,16 @@
             font-size: 16px;
         }
 
+
+        #autoclick {
+            background-color: black;
+            color:lime;
+            border:2px solid green;
+            margin: 10px;
+            cursor: pointer;
+            font: size 16px;
+        }
+
         #upgrade:hover {
             background-color: darkgreen;
         }
@@ -69,6 +79,10 @@
     <button id="upgrade" onclick="buyUpgrade()">get 2x the clicks</button>
     <p id="message"></p>
 
+    <button> id="autoclick" onclick=  </button>
+
+
+
     <!--this is the einstein you click-->
     <button id="clicker" onclick="increaseCount(); spinElement();">
         <img id="einstein" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXnNsd6HAjRGAHc33PpnQC7LfZFjI4N6OiV8tvGcMBA&s" alt="Click me">
@@ -77,6 +91,7 @@
         let count = 0;
         let clickPower = 1;
         let upgradeCost = 50;
+        let autocost = 1;
         let rotation = 0;
 
         function increaseCount() {
@@ -111,6 +126,13 @@
             rotation += 360;
             document.getElementById("einstein").style.transform = "rotation(" + rotation + "deg)";
         }
+
+        function add_autoclick(){
+            document.getElementById("autoclick").textContent = 
+                "Buy auto Click (cost:" + autocost + "clicks)";
+        }
+
+        updateCount()
 
 </script>
 
