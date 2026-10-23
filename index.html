@@ -75,10 +75,63 @@
 
         .brain{
             position:fixed;
+            font-size: 32px;
+            z-index: 9999;
             pointer-events: none;
             transform: translate(-50%, -50%);
             animation: float-up 0.8s ease-out forwards;
         }
+
+        #rouletteMini{
+            position:fixed;
+            right: 20px;
+            top: 40px;
+            background:none;
+            border: 2px solid green;
+            border-radius: 50%;
+            cursor:pointer;
+            padding: 8px;
+        }
+
+        #roulettePanel {
+            display: none;
+            position: fixed;
+            right: 10px;
+            top: 10px;
+            width: 50px;
+            max-width: 95vw;
+            background-color: black;
+            border: 2px solid green;
+            padding: 10px;
+            z-index: 5000;
+        }
+
+        #rouletterPanel input {
+            width: 90px;
+            background:black;
+            color:lime;
+            border: 2px solid green;
+            padding: 6px;
+            font-size: 16px;
+        }
+
+        #roulettePanel button{
+            background: black;
+            color:lime;
+            border: 2px solid green;
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+
+        #rouletterPanel button:hover { background-color: darkgreen; }
+
+        #wheelGroup {
+            transform-origin: 0 0;
+            transition: transform 4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .pocket{ cursor: pointer; stroke: #222; stroke-width: 1 ; }
+        .pocket.selected { stroke: yellow; stroke-width: 4; }
 
     @keyframes float-up {
         from{ opacity: 1; margin-top: 0; }
@@ -101,12 +154,12 @@
 
     <!--this is the einstein you click-->
     <button id="clicker" onclick="increaseCount(); spinElement();">
-        <img id="einstein" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXnNsd6HAjRGAHc33PpnQC7LfZFjI4N6OiV8tvGcMBA&s" alt="Click me">
+        <img id="einstein" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXnNsd6HAjRGAHc33PpnQC7LfZFjI4N6OiV8tvGcMBA&s">
     </button>    
     
-    <!--this is the floating brain-->
-    <button id="clicker" onclick="increaseCount(); spinElement; spawnBrain(event.clientX, event.clientY);">
-    
+    <button id="rouletteMini">
+        <img src="https://media.istockphoto.com/id/485660878/vector/sport-illustration.jpg?s=612x612&w=0&k=20&c=u7WciQuhqrutwio8ZeIquSiyZ1vHZhhyb0qeUb2D4A4=">
+    </button>
     
     <script>
         let rotation = 0;
@@ -115,6 +168,7 @@
         let upgradeCost = 50;
         let autocost = 10;
         let autoclickers = 0;
+        const clicker = document.getElementById("clicker");
         
 
 
@@ -188,6 +242,28 @@
             }
         }, 1000);
 
+        function spawnBrain(){
+            const r = clicker.getBoundingClientRect();
+            const cx = r.left + r.width / 2;
+            const cy = r.top + r.height / 2;
+
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 120 + Math.random() * 80;
+
+            const brain = document.createElement("div");
+            brain.className = "brain";
+            brain.textContent = "🧠";
+            brain.style.left = (cx + Math.cos(angle) * distance) + "px";
+            brain.style.top = (cy + Math.sin(angle) * distance) + "px";
+            document.body.appendChild(brain);
+            setTimeout(() => brain.remove(), 900);
+        }
+
+        clicker.addEventListener("click", function(){
+            increaseCount();
+            spinElement();
+            spawnBrain();
+        });
 
         updateCount()
         add_autoclick()
