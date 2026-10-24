@@ -96,17 +96,21 @@
         #roulettePanel {
             display: none;
             position: fixed;
-            right: 10px;
-            top: 10px;
-            width: 50px;
+            left: 50%;
+            top: 10%;
+            transform: translateX(-50%, -50%);
+            width: 340px;
             max-width: 95vw;
+            max-height: 95vh;
+            overflow:auto;
+            box-sizing: border-box;
             background-color: black;
             border: 2px solid green;
             padding: 10px;
             z-index: 5000;
         }
 
-        #rouletterPanel input {
+        #roulettePanel input {
             width: 90px;
             background:black;
             color:lime;
@@ -123,7 +127,7 @@
             cursor: pointer;
         }
 
-        #rouletterPanel button:hover { background-color: darkgreen; }
+        #roulettePanel button:hover { background-color: darkgreen; }
 
         #wheelGroup {
             transform-origin: 0 0;
@@ -153,7 +157,7 @@
     <p id="message"></p>
 
     <!--this is the einstein you click-->
-    <button id="clicker" onclick="increaseCount(); spinElement();">
+    <button id="clicker">
         <img id="einstein" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNXnNsd6HAjRGAHc33PpnQC7LfZFjI4N6OiV8tvGcMBA&s">
     </button>    
     
@@ -162,7 +166,7 @@
     </button>
 
     <div id="roulettePanel">
-        <button id="rouletteClose" style="float:right;">X</button>"
+        <button id="rouletteClose" style="float:right;">X</button>
         <h3>Roulette</h3>
 
         <div>
@@ -199,7 +203,7 @@
         const STEP = 360 / ORDER.length;
         const SVGNS = "http://www.w3.org/2000/svg";
         const wheelGroup = document.getElementById("wheelGroup");
-        const betInput = document.getElementById("betamount");
+        const betInput = document.getElementById("betAmount");
         const rouletteMSG = document.getElementById("rouletteMSG");
 
         function increaseCount() {
@@ -318,9 +322,86 @@
                     selectedPocket = num;
                     document.getElementById("selectedText").textContent = "Selected: " + num;
                 });
+                wheelGroup.appendChild(path);
+
+                const [tx, ty] = pt(112, mid).split(" ");
+                const label = document.createElementNS(SVGNS, "text");
+                label.setAttribute("x", tx);
+                label.setAttribute("y", ty);
+                label.setAttribute("transform", `rotate(${mid} ${tx} ${ty})`);
+                label.setAttribute("text-anchor", "middle");
+                label.setAttribute("dominant-baseline", "middle");
+                label.setAttribute("fill", "white");
+                label.setAttribute("font-size", "11");
+                label.setAttribute("pointer-events", "none");
+                label.textContent = num;
+                wheelGroup.appendChild(label);
             });
         }
 
+        function placeBet() {
+            if (spinning) return;
+            const amount = Math.floor(Number(betInput.value));
+
+            if (selectedPocket === null) {
+                rouletteMSG.textContent = "click a pocket first!";
+                return;
+            }
+            if (!amount || amount < 1) {
+                rouletteMSG.textContent = "enter a bet amount";
+                return;
+            }
+            if (amount > count) {
+                rouletteMSG.textContent = "not enough clicks";
+                return;
+            }
+
+            count -= amount;
+            updateCount();
+            spinning = true;
+            rouletteMSG.textContent = "Spinning...";
+            const winIndex = Math.floor(Math.random() * ORDER.length);
+            const winNum = ORDER[winIndex];
+            const winAngle = winIndex * STEP + STEP / 2;
+
+            wheelRot = Math.ceil(wheelRot / 360) * 360 + 360 * 5 + (360 - winAngle);
+            wheelGroup.style.transform = `rotate(${wheelRot}deg)`;
+
+            setTimeout(function () {
+                if (winNum === selectedPocket) {
+                    count += amount * 36;
+                    rouletteMSG.textContent = "it landed on " + winNum + ". You win " + (amount * 36) + "!";
+                } else {
+                    rouletteMSG.textContent = "It landed on " + winNum + ". You lost " + amount + ".";
+                }
+                updateCount();
+                spinning = false;
+            }, 4100);
+        }
+
+        document.getElementById("rouletteMini").addEventListener("click", function () {
+            document.getElementById("roulettePanel").style.display = "block";
+            this.style.display = "none";
+        });
+
+
+        document.getElementById("rouletteClose").addEventListener("click", function () {
+            document.getElementById("roulettePanel").style.display = "none";
+            document.getElementById("rouletteMini").style.display = "block";
+        });
+
+        document.getElementById("wheelCenter").addEventListener("click", placeBet);
+        document.getElementById("betMax").addEventListener("click", function () {
+            betInput.value = count;
+        });
+
+        document.querySelectorAll("[data-add]").forEach(btn => {
+            btn.addEventListener("click", function () {
+                betInput.value = Math.min(count, Number(betInput.value) + Number(this.dataset.add));
+            });
+        });
+
+        buildWheel();
         updateCount();
         add_autoclick();
         upgradetext();
