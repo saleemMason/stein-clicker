@@ -158,8 +158,30 @@
     </button>    
     
     <button id="rouletteMini">
-        <img src="https://media.istockphoto.com/id/485660878/vector/sport-illustration.jpg?s=612x612&w=0&k=20&c=u7WciQuhqrutwio8ZeIquSiyZ1vHZhhyb0qeUb2D4A4=">
+        <img src="https://media.istockphoto.com/id/485660878/vector/sport-illustration.jpg?s=612x612&w=0&k=20&c=u7WciQuhqrutwio8ZeIquSiyZ1vHZhhyb0qeUb2D4A4=" width="64">
     </button>
+
+    <div id="roulettePanel">
+        <button id="rouletteClose" style="float:right;">X</button>"
+        <h3>Roulette</h3>
+
+        <div>
+            Bet : <input type="number" id="betAmount" min="1" value="10">
+            <button data-add="10">+10</button>
+            <button data-add="100">+100</button>
+            <button id="betMax">Max</button>
+        </div>
+        
+        <p id="selectedText">Click a pocket to pick it</p>
+
+        <svg viewBox="-150 -150 300 300" width="300" height="300">
+            <g id="wheelGroup"></g>
+            <polygon points="-10, -150 10, -150 0, -128" fill="white"/>
+            <circle id="wheelCenter" cx="0" r="60" fill="darkgreen" stroke="lime" stroke-width="3" style="cursor:pointer;"/>
+            <text x="0" y="6" text-anchor="middle" fill="white" font-size="18" pointer-events="none">BET</text>
+        </svg>
+        <p id="rouletteMSG"></p>
+    </div>
     
     <script>
         let rotation = 0;
@@ -168,9 +190,17 @@
         let upgradeCost = 50;
         let autocost = 10;
         let autoclickers = 0;
+        let selectedPocket =null;
+        let wheelRot = 0;
+        let spinning = false;
         const clicker = document.getElementById("clicker");
-        
-
+        const ORDER = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26]
+        const REDS = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]
+        const STEP = 360 / ORDER.length;
+        const SVGNS = "http://www.w3.org/2000/svg";
+        const wheelGroup = document.getElementById("wheelGroup");
+        const betInput = document.getElementById("betamount");
+        const rouletteMSG = document.getElementById("rouletteMSG");
 
         function increaseCount() {
             count += clickPower;
@@ -265,9 +295,35 @@
             spawnBrain();
         });
 
-        updateCount()
-        add_autoclick()
-        upgradetext()
+        function pt(r,a) {
+            const rad = a * Math.PI / 180;
+            return (r * Math.sin(rad)).toFixed(2) + " " + (-r * Math.cos(rad)).toFixed(2);
+        }
+
+        function buildWheel(){
+            ORDER.forEach((num, i) => {
+                const a0 = i * STEP;
+                const a1 = (i + 1) * STEP;
+                const mid = a0 + STEP / 2;
+                const path = document.createElementNS(SVGNS, "path");
+                path.setAttribute("d",
+                    `M ${pt(70, a0)} L ${pt(140, a0)} A 140 140 0 0 1 ${pt(140, a1)} L ${pt(70, a1)} A 70 70 0 0 0 ${pt(70, a0)} Z`);
+                path.setAttribute("fill", num === 0 ? "green" : REDS.includes(num) ? "crimson" : "#111");
+                path.setAttribute("class", "pocket");
+                path.dataset.num = num;
+                path.addEventListener("click", function () {
+                    if (spinning) return;
+                    document.querySelectorAll(".pocket").forEach(p => p.classList.remove("selected"));
+                    path.classList.add("selected");
+                    selectedPocket = num;
+                    document.getElementById("selectedText").textContent = "Selected: " + num;
+                });
+            });
+        }
+
+        updateCount();
+        add_autoclick();
+        upgradetext();
 </script>
 
 
