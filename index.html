@@ -142,6 +142,20 @@
         to {opacity: 0; margin-top: -60px; }
     }
 
+    #roulettePanel button[data-color="red"] {color: red; border-color: red; }
+    #roulettePanel button[data-color="black"] {color:white; border-color: white; }
+    #roulettePanel button[data-color="green"] {color:lime; border-color: lime; }
+
+    #roulettePanel button[data-color="red"]:hover,
+    #roulettePanel button[data-color="red"].active { background-color: red; color: black; }
+
+    #roulettePanel button[data-color="black"]:hover,
+    #roulettePanel button[data-color="black"].active { background-color: white; color: black; }
+
+    #roulettePanel button[data-color="green"]:hover,
+    #roulettePanel button[data-color="green"].active { background-color: lime; color: black; }
+
+    
     </style>
 </head>
 
@@ -177,9 +191,9 @@
         </div>
         
         <div style="margin: 8px 0;">
-            <button data-color="red" style="color:red; border-color:red;">Red</button>
-            <button data-color="black" style="color:white; border-color: white;">Black</button>
-            <button data-color="green" style="color:lime; border-color: lime">Green</button>
+            <button data-color="red">Red</button>
+            <button data-color="black">Black</button>
+            <button data-color="green">Green</button>
         </div>
 
         <p id="selectedText">Click a pocket to pick it</p>
@@ -391,9 +405,9 @@
 
                 if(won) {
                     count += amount * multiplier;
-                    rouletteMSG.textContent = "it landed on " + winNum + ". You win " + (amount * multiplier) + "!";
+                    rouletteMSG.textContent = "it landed on " + winColor + " " + winNum +  ". You win " + (amount * multiplier) + "!";
                 } else {
-                    rouletteMSG.textContent = "It landed on " + winNum + ". You lost " + amount + ".";
+                    rouletteMSG.textContent = "It landed on " + winColor + " " + winNum + ". You lost " + amount + ".";
                 }
                 updateCount();
                 spinning = false;
@@ -425,10 +439,21 @@
         document.querySelectorAll("[data-color]").forEach(btn => {
             btn.addEventListener("click", function () {
                 if (spinning) return;
+
+                document.querySelectorAll("[data-color]").forEach(p => p.classList.remove("active"));
                 document.querySelectorAll(".pocket").forEach(p => p.classList.remove("selected"));
                 selectedPocket = null;
-                selectedColor = btn.dataset.color;
-                document.getElementById("selectedText").textContent = "Selected " + selectedColor;
+
+                if (selectedColor === btn.dataset.color) {
+
+                    selectedColor = null;
+                    document.getElementById("selectedText").textContent = "Click a pocket to pick it";
+                } else{
+
+                    selectedColor = btn.dataset.color;
+                    btn.classList.add("active");
+                    document.getElementById("selectedText").textContent = "Selected: " + selectedColor;
+                }
             });
         });
 
