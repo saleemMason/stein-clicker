@@ -155,6 +155,34 @@
     #roulettePanel button[data-color="green"]:hover,
     #roulettePanel button[data-color="green"].active { background-color: lime; color: black; }
 
+    #coinMini {
+        position: fixed;
+        right: 20px;
+        top: 150px;
+        background: none;
+        border: 2px solid green;
+        border-radius: 50%;
+        cursor: pointer;
+        padding: 8px;
+    }
+
+    #coinPanel {
+        display: none;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 340px;
+        max-width: 95vw;
+        max-height: 95vh;
+        overflow:auto;
+        box-sizing: border-box;
+        background-color: black;
+        border: 2px solid green;
+        padding: 10px;
+        z-index: 5000;
+    }
+
     
     </style>
 </head>
