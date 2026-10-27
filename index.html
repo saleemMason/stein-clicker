@@ -5,40 +5,119 @@
     <title>Stein Clicker</title>
 
     <style>
-        img{
-            border-radius: 50;
+        :root {
+            --bg: #050805;
+            --panel: #0b120b;
+            --line: #1f7a3a;
+            --neon: #39ff6a;
+            --dim: #2a9d4a;
         }
         
+        * { box-sizing: border-box;}
+        
         body {
-            background-color: black;
-            color: green;
+            margin:0;
+            padding:20px 12px 130px;
+            min-height: 100vh;
+            background: radial-gradient(ellipse at 50% 0%, #0f3a1a 0%, #050805 60%) fixed;
+            color: var(--neon);
             text-align: center;
-            font-family: Arial, sans-serif;
+            font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
         }
-        h1 { color: green; }
-        p  { font-style: italic; color: green; }
+
+        h1 {
+            margin:10px 0 0;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--neon);
+            text-shadow: 0 0 12px rgba(57, 255, 106, .7), 0 0 32px rgba(57, 255, 106, .35);
+        }
+        p  { color: var(--dim); margin: 6px 0; }
+
+        .label {
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            margin: 0 0 14px;
+        }
+
+        #count {
+            font-size: clamp(3rem, 12vw,6rem);
+            font-weight: 700;
+            margin: 0.2rem 0;
+            color: #fff;
+            text-shadow: 0 0 18px var(--neon), 0 0 40px rgba(57, 255, 106, .5);
+        }
+
+        #message { min-height: 1.4em; color: #b6ffc9;}
+        #rot { min-height: 1.4em; font-style: italic; opacity: .8; }
+        
+        button { font-family: inherit;}
+        
+        #upgrade, #autoclick, .shop,
+        #roulettePanel button, #coinPanel button {
+            bacnkground: linear-gradient(180deg, #0f1f12, #08110a);
+            color: var(--neon);
+            border: 1px solid var(--line);
+            border-radius: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all .15s ease;
+        }
+        
+        #upgrade:hover, #autoclick:hover, .shop:hover,
+        #roulettePanel button:hover, #coinPanel button:hover {
+            background: #12341a;
+            box-shadow: 0 0 14px rgba(57, 255, 106, .45);
+            transform: translateY(-1px);
+        }
+
+        .upgrades {
+            display:flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 14px 0;
+        }
 
         #clicker {
-            cursor: pointer;
-            padding: 0;
             background: none;
             border: none;
+            padding: 0;
+            margin: 18px 0;
+            cursor: pointer;
+            border-radius: 50%;
             transition: transform 0.1s ease;
+            -webkit-tap-highlight-color: transparent;
         }
 
         #clicker img {
-            width: 200px;
-            height: 200px;
+            width: 220px;
+            height: 220px;
+            max-width: 70vw;
+            max-width: 70vw;
             object-fit: cover;
-            max-width: 80vw;
             display: block;
             border-radius: 50%;
+            border: 0 0 25px rgba(57, 255, 106, .6), 0 0 70px rgba(57, 255, 106, .25) ;
             transition: transform 0.4s ease;
+            animation: glow 2.5s ease-in-out infinite alternate;
         }
 
+        @keyframes glow{
+            from { box-shadow: 0 0 20px rgba(57, 255, 106, .45), 0 0 50px rgba(57, 255, 106, .15); }
+            from { box-shadow: 0 0 35px rgba(57, 255, 106, .85), 0 0 90px rgba(57, 255, 106, .35); }
+        }
 
-        #clicker:focus-visible { outline: 3px solid green; outline-offset: 6px; }
+        #clicker:focus-visible { outline: 3px solid var(--neon); outline-offset: 8px; }
 
+        .brain {
+            position:fixed;
+            font-size: 32px;
+            z-index: none;
+            animation: float-up 0.8s ease-out forwards;
+        }
         #count {
             font-size: 5rem;
             margin: 0.5rem 0;
